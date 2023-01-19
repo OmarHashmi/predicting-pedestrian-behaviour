@@ -14,6 +14,8 @@ from utils.general import check_img_size, check_requirements, check_imshow, non_
 from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
 
+from kalman import KalmanFilter
+
 random.seed(1)
 
 def detect(save_img=False):
@@ -100,6 +102,7 @@ def detect(save_img=False):
 
         # Process detections
         for i, det in enumerate(pred):  # detections per image
+            amountPeople = []
             if webcam:  # batch_size >= 1
                 p, s, im0, frame = path[i], '%g: ' % i, im0s[i].copy(), dataset.count
             else:
@@ -130,7 +133,8 @@ def detect(save_img=False):
                     if save_img or view_img:  # Add bbox to image
                         label = f'{names[int(cls)]} {conf:.2f}'
                         if "person" in label:
-                            plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=1)
+                            plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=1)  
+                            amountPeople.append(frame)                          
 
             # Print time (inference + NMS)
             print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
@@ -166,6 +170,8 @@ def detect(save_img=False):
                             save_path += '.mp4'
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer.write(im0)
+
+        KalmanFilter.predict(amountPeople, (xyxy[2] + xyxy[0])/2, (xyxy[3] + xyxy[1])/2)
 
     if save_txt or save_img:
         print(f" The output with the result is saved in: {save_path}")
