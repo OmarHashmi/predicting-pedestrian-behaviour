@@ -24,10 +24,22 @@ for child in annotations:
             else:
                 buffer = '00'
 
+            xCenter = (float(attribute.get('xbr')) + float(attribute.get('xtl'))) / 2
+            yCenter = (float(attribute.get('ybr')) + float(attribute.get('ytl'))) / 2
+            width = float(attribute.get('xbr')) - float(attribute.get('xtl'))
+            height = float(attribute.get('ybr')) - float(attribute.get('ytl'))
+            xCenter = xCenter / 1920
+            width = width / 1920
+            yCenter = yCenter / 1080
+            height = height / 1080
+
             # Make sure you only run the file once
             if (os.path.exists("B:/CapstoneData/ParsedFiles/" + buffer + attribute.get('frame') + ('.txt'))):
                 with open("B:/CapstoneData/ParsedFiles/" + buffer + attribute.get('frame') + ('.txt'), 'a') as f:
-                    f.write('0' + " " + attribute.get('xtl') + " " + attribute.get('ytl') + " " + attribute.get('xbr') + " " + attribute.get('ybr') + '\n')
+                    f.write('0' + " " + str(xCenter) + " " + str(yCenter) + " " + str(width) + " " + str(height) + '\n')
+                    # f.write('0' + " " + attribute.get('xtl') + " " + attribute.get('ytl') + " " + attribute.get('xbr') + " " + attribute.get('ybr') + '\n')
             else:
                 with open("B:/CapstoneData/ParsedFiles/" + buffer + attribute.get('frame') + ('.txt'), 'w') as f:
-                    f.write('0' + " " + attribute.get('xtl') + " " + attribute.get('ytl') + " " + attribute.get('xbr') + " " + attribute.get('ybr') + '\n')
+                    f.write('0' + " " + str(xCenter) + " " + str(yCenter) + " " + str(width) + " " + str(height) + '\n')
+
+                    # f.write('0' + " " + attribute.get('xtl') + " " + attribute.get('ytl') + " " + attribute.get('xbr') + " " + attribute.get('ybr') + '\n')

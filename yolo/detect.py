@@ -171,7 +171,7 @@ def detect(save_img=False):
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer.write(im0)
 
-        KalmanFilter.predict(amountPeople, (xyxy[2] + xyxy[0])/2, (xyxy[3] + xyxy[1])/2)
+        # KalmanFilter.predict(amountPeople, (xyxy[2] + xyxy[0])/2, (xyxy[3] + xyxy[1])/2)
 
     if save_txt or save_img:
         print(f" The output with the result is saved in: {save_path}")
