@@ -16,7 +16,7 @@ from utils.torch_utils import select_device, load_classifier, time_synchronized,
 
 random.seed(1)
 
-def detect(save_img=False):
+def detect(opt,save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
     save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
             for opt.weights in ['yolov7.pt']:
-                detect()
+                detect(opt)
                 strip_optimizer(opt.weights)
         else:
-            detect()
+            detect(opt)
