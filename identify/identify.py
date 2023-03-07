@@ -1,6 +1,9 @@
 import random
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
+
+sys.path.append("identify")
 from scipy.spatial import distance
 from getPoint import getPoint
 
@@ -10,7 +13,7 @@ class Identify:
 	hist={}
 	frame=0
 
-	def __init__(self, histLen, minDist):
+	def __init__(self, histLen=5, minDist=20):
 		self.histLen=histLen
 		self.minDist=minDist
 
@@ -52,9 +55,10 @@ class Identify:
 				self.hist.update({self.frame:oldPoints})
 
 		# Unmatched points are new
-		for point in points:
-			newPoints.update({hex(random.randint(0,2**8)): point})
-			self.hist.update({self.frame: newPoints})
+		if not points is None:
+			for point in points:
+				newPoints.update({hex(random.randint(0,2**8)): point})
+				self.hist.update({self.frame: newPoints})
 
 		# Points that exist in hist[frame-histLen] are stale
 		if (self.frame-self.histLen) in self.hist:
