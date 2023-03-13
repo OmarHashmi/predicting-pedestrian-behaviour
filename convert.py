@@ -15,6 +15,9 @@ for filename in os.listdir(annotations_dir):
     tree = ET.parse(video_file) # Parse the XML file
     annotations = tree.getroot() # Get the root of the XML file
 
+    unique_id = annotations[1][0][1].text
+    print(unique_id)
+
     for child in annotations:
         # print (child.tag, child.attrib)
         if (child.get('label') == 'pedestrian' or child.get('label') == 'ped'):
@@ -37,17 +40,17 @@ for filename in os.listdir(annotations_dir):
                 height = height / 1080
 
                 # Create a new folder within ParsedFiles to store the new files with a unique_id
-                new_folder_name = video_file.split('/')[-1].split('.')[0]
-                new_folder_path = os.path.join("B:/CapstoneData/ParsedFiles", new_folder_name)
+                # new_folder_name = video_file.split('/')[-1].split('.')[0]
+                new_folder_path = os.path.join("B:/CapstoneData/ParsedFilesNew")
                 if not os.path.exists(new_folder_path):
                     os.mkdir(new_folder_path)
 
                 # Make sure you only run the file once and place the files in the correct folder
-                if (os.path.exists(os.path.join(new_folder_path, buffer + attribute.get('frame') + ('.txt')))):
-                    with open(os.path.join(new_folder_path, buffer + attribute.get('frame') + ('.txt')), 'a') as f:
+                if (os.path.exists(os.path.join(new_folder_path, unique_id + buffer + attribute.get('frame') + ('.txt')))):
+                    with open(os.path.join(new_folder_path, unique_id + buffer + attribute.get('frame') + ('.txt')), 'a') as f:
                         f.write('0' + " " + str(xCenter) + " " + str(yCenter) + " " + str(width) + " " + str(height) + '\n')
                         # f.write('0' + " " + attribute.get('xtl') + " " + attribute.get('ytl') + " " + attribute.get('xbr') + " " + attribute.get('ybr') + '\n')
                 else:
-                    with open(os.path.join(new_folder_path, buffer + attribute.get('frame') + ('.txt')), 'w') as f:
+                    with open(os.path.join(new_folder_path, unique_id + buffer + attribute.get('frame') + ('.txt')), 'w') as f:
                         f.write('0' + " " + str(xCenter) + " " + str(yCenter) + " " + str(width) + " " + str(height) + '\n')
                         # f.write('0' + " " + attribute.get('xtl') + " " + attribute.get('ytl') + " " + attribute.get('xbr') + " " + attribute.get('ybr') + '\n')
