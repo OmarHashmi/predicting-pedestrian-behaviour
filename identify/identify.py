@@ -34,6 +34,7 @@ class Identify:
 
 				frame = self.hist[self.frame-i]
 
+				removeListIndexes=[]
 				for key in frame:
 					if len(points)==0:
 						break
@@ -41,9 +42,13 @@ class Identify:
 					# Check for match
 					distances=distance.cdist(np.asarray([frame[key]]),np.asarray(points))
 					smallestIndex=distances.argmin()
-					if (distances[0][smallestIndex]<self.minDist):
+					if ((distances[0][smallestIndex]<self.minDist) and (smallestIndex not in removeListIndexes)):
 						oldPoints.update({key: points[smallestIndex]})
-						points.remove(points[smallestIndex])
+						removeListIndexes.append(smallestIndex)
+
+				# Points need to be removed after the looping is done so the indexes don't change
+				for index in sorted(removeListIndexes, reverse=True):
+					del points[index]
 
 				for key in oldPoints:
 					if key in self.hist[self.frame-i]:
@@ -58,7 +63,7 @@ class Identify:
 		if not points is None:
 			for point in points:
 				newPoints.update({hex(random.randint(0,2**8)): point})
-				self.hist.update({self.frame: newPoints})
+				self.hist.update({self.frame:newPoints|oldPoints})
 
 		# Points that exist in hist[frame-histLen] are stale
 		if (self.frame-self.histLen) in self.hist:
